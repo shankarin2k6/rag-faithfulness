@@ -73,6 +73,7 @@ graph TD
     style K fill:#f59e0b,color:#000
     style P fill:#22c55e,color:#fff
     style Q fill:#ef4444,color:#fff
+```
 
 ## ⚙️ Installation & Setup
 
