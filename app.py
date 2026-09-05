@@ -771,9 +771,9 @@ with st.sidebar:
     # PDFs/TXT files without changing the app flow.
     st.markdown("---")
     st.caption("Fallback uploader: use if the inline + button doesn't work.")
-    if "manual_upload" not in st.session_state:
-        st.session_state.manual_upload = None
-    st.file_uploader("Upload PDF or TXT (fallback)", type=["pdf", "txt"], key="manual_upload")
+    _fallback_file = st.file_uploader("Upload PDF or TXT (fallback)", type=["pdf", "txt"], key="_fb_upload")
+    if _fallback_file is not None:
+        st.session_state["_fb_fallback"] = _fallback_file
 
 # Main-page title was moved to the top of the sidebar (above Settings)
 # per request -- intentionally not rendered here anymore.
@@ -1321,7 +1321,7 @@ if submission:
     # If the chat input didn't provide a file (browser/Streamlit quirks),
     # fall back to the sidebar uploader above (stored in session state).
     if uploaded_file is None:
-        uploaded_file = st.session_state.get("manual_upload")
+        uploaded_file = st.session_state.get("_fb_fallback")
 
     active_collection = st.session_state.get("uploaded_collection")
 
