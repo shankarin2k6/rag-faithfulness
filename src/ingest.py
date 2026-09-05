@@ -63,16 +63,17 @@ def _read_pdf(path) -> str:
     testing, so we use it when available and fall back to pypdf only if
     pdftotext isn't installed on the machine.
     """
-    result = subprocess.run(
-        ["pdftotext", str(path), "-"],
-        capture_output=True, text=True,
-    )
-    if result.returncode == 0 and result.stdout.strip():
-        return result.stdout
+    try:
+        result = subprocess.run(
+            ["pdftotext", str(path), "-"],
+            capture_output=True, text=True,
+        )
+        if result.returncode == 0 and result.stdout.strip():
+            return result.stdout
+    except FileNotFoundError:
+        pass  # pdftotext (poppler-utils) not installed
 
-    print(f"  NOTE: pdftotext unavailable or failed for {path.name}, "
-          f"falling back to pypdf (install poppler-utils for better extraction quality: "
-          f"sudo apt install poppler-utils)")
+    # pdftotext unavailable or failed -- fall back to pypdf.
     reader = PdfReader(str(path))
     pages_text = []
     for page in reader.pages:
