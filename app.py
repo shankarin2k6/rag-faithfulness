@@ -771,6 +771,8 @@ with st.sidebar:
     # PDFs/TXT files without changing the app flow.
     st.markdown("---")
     st.caption("Fallback uploader: use if the inline + button doesn't work.")
+    if "manual_upload" not in st.session_state:
+        st.session_state.manual_upload = None
     st.file_uploader("Upload PDF or TXT (fallback)", type=["pdf", "txt"], key="manual_upload")
 
 # Main-page title was moved to the top of the sidebar (above Settings)
