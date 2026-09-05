@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environment
+venv/
+.venv/
+env/
+
+# Environment variables (contains API keys)
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Evaluation artifacts
+eval/
+
+# Streamlit (keep config but ignore generated files)
+.streamlit/secrets.toml
+
+# Freebuff
+.freebuff/
