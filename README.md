@@ -37,8 +37,42 @@ The system retrieves relevant chunks from a vector store (ChromaDB), generates a
 | **✅ Faithfulness Check** | Splits the answer into claims, checks each against context, verifies citations, and computes a faithfulness score. |
 | **⚠️ Abstain** | If the score falls below the threshold (70%) or the model declines, the system flags the answer as low confidence. |
 
-## 🛠️ System Architecture
-rag-faithfulness/ ├── app.py # Streamlit UI (chat interface + file upload) ├── src/ │ ├── config.py # Central configuration (thresholds, models, paths) │ ├── ingest.py # PDF/TXT extraction + section-aware chunking + embedding │ ├── retrieve.py # ChromaDB query + near-duplicate filtering │ ├── generate.py # Grounded prompt construction + Groq API call │ ├── faithfulness.py # Claim splitting + entailment check + citation verification │ └── llm_client.py # Provider-agnostic LLM client (Groq + NVIDIA) ├── data/ │ ├── raw/ # Source documents (RTI Act PDF included) │ └── chroma_db/ # Persistent vector store ├── assets/ # UI assets (icons, spinners) ├── eval/ # Gold-standard Q&A set for evaluation ├── requirements.txt └── README.md
+## 🏗️ Architecture Diagram
+
+```mermaid
+graph TD
+    A[👤 User] -->|Types question| B[🖥️ Streamlit Chat UI]
+    A -->|Uploads PDF/TXT| B
+
+    B -->|Query text| C[🔍 Retrieval Engine]
+    B -->|File bytes| D[📄 Ingestion Pipeline]
+
+    D -->|Extract text| E[pypdf / pdftotext]
+    E -->|Raw text| F[✂️ Section-Aware Chunker]
+    F -->|Chunks| G[sentence-transformers Embedder]
+    G -->|Embeddings + Chunks| H[(🗄️ ChromaDB Vector Store)]
+
+    C -->|Embed query| I[sentence-transformers Embedder]
+    I -->|Query embedding| H
+    H -->|Top-K chunks| C
+    C -->|Ranked chunks| J[💬 Groq LLM API]
+    J -->|Raw answer| K[✅ Faithfulness Layer]
+
+    K -->|Split into claims| L[📋 Claim Extractor]
+    L -->|Individual claims| M[⚖️ Entailment Checker]
+    M -->|Grounded / Ungrounded| N[📎 Citation Verifier]
+    N -->|Score + Verified Claims| O{Score ≥ 70%?}
+
+    O -->|✅ Yes| P[📤 Display Answer + Scores]
+    O -->|❌ No| Q[⚠️ Abstain - Low Confidence]
+
+    style A fill:#4f46e5,color:#fff
+    style B fill:#FF4B4B,color:#fff
+    style H fill:#7c3aed,color:#fff
+    style J fill:#10b981,color:#fff
+    style K fill:#f59e0b,color:#000
+    style P fill:#22c55e,color:#fff
+    style Q fill:#ef4444,color:#fff
 
 ## ⚙️ Installation & Setup
 
