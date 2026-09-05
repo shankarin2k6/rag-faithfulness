@@ -61,6 +61,35 @@ rag-faithfulness/
 └── requirements.txt
 ```
 
+## Deploy to Streamlit Community Cloud (free)
+
+1. Create a GitHub repo and push this project:
+   ```bash
+   # On GitHub, create a new empty repo named e.g. "rag-faithfulness"
+   git remote add origin https://github.com/YOUR_USERNAME/rag-faithfulness.git
+   git push -u origin main
+   ```
+
+2. Go to [share.streamlit.io](https://share.streamlit.io) and sign in with GitHub.
+
+3. Click **"New app"** and select:
+   - **Repository:** `YOUR_USERNAME/rag-faithfulness`
+   - **Branch:** `main`
+   - **Main file path:** `app.py`
+
+4. Before deploying, add your API key as a secret:
+   - In the Streamlit Cloud dashboard, click **"Advanced settings"** → **"Secrets"**
+   - Paste this (replace with your real key):
+     ```toml
+     GROQ_API_KEY = "gsk_your_key_here"
+     ```
+
+5. Click **"Deploy"**. The first deploy takes ~2-3 minutes (installs dependencies + builds the vector index).
+
+> **Note:** Streamlit Community Cloud has ephemeral storage. The vector index
+> is rebuilt automatically from `data/raw/` on each cold start (~30s). The
+> pre-built index is also committed to the repo for faster initial loads.
+
 ## Roadmap
 
 - [x] Week 1: Baseline RAG pipeline (retrieve + generate)
